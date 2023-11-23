@@ -1,25 +1,42 @@
+
 # include <string.h>
 # include <stddef.h>
 # include <stdlib.h>
 # include <fcntl.h>
 # include <stdio.h>
 # include <unistd.h>
-# define BUFFER_SIZE 45
 
+#ifndef BUFFER_SIZE
+# define BUFFER_SIZE 10
+#endif
+
+void	*ft_calloc(size_t	count, size_t	size);
+int	ft_strlen(char *s);
 char	*ft_strndup(const char *s, int n);
+char	*find_new_line(char *s);
 void	ft_bzero(void *s, size_t n);
-void	*ft_calloc(size_t count, size_t size);
 
-
-int ft_strlen(char *s)
+void	*ft_calloc(size_t	count, size_t	size)
 {
-    int i;
-    if (s)
-    {
-        while (*s++)
-            i++;
-    }
-    return (i);
+	void	*mem;
+
+	mem = (void *)malloc(count * size);
+	if (mem != NULL)
+		ft_bzero(mem, count * size);
+	return (mem);
+}
+
+int	ft_strlen(char *s)
+{
+	int	i;
+
+	i = 0;
+	if (s)
+	{
+		while (*s++)
+			i++;
+	}
+	return (i);
 }
 
 char	*ft_strndup(const char *s, int n)
@@ -68,17 +85,6 @@ void	ft_bzero(void *s, size_t n)
 	}
 }
 
-void	*ft_calloc(size_t count, size_t size)
-{
-	void	*ptr;
-
-	ptr = malloc(count * size);
-	if (!ptr)
-		return (NULL);
-	ft_bzero(ptr, count * size);
-	return (ptr);
-}
-
 char	*ft_reallocate(char *buffer, int size, char *last_origin)
 {
 	char	*actual_buffer;
@@ -111,10 +117,8 @@ char	*get_next_line(int fd)
 			ptr = ft_calloc (BUFFER_SIZE + 1, sizeof (char));
 	if (fd < 0 || BUFFER_SIZE < 1)
 		return (free(ptr), NULL);
-	while (!find_new_line(ptr) && ptr && \
-	read(fd, &ptr[ft_strlen(ptr)], BUFFER_SIZE) > 0)
-		ptr = ft_reallocate(ptr, (counter += BUFFER_SIZE) \
-		+ BUFFER_SIZE, NULL);
+	while (!find_new_line(ptr) && ptr && read(fd, &ptr[ft_strlen(ptr)], BUFFER_SIZE) > 0)
+		ptr = ft_reallocate(ptr, (counter += BUFFER_SIZE) + BUFFER_SIZE, NULL);
 	if (find_new_line(ptr))
 		return (ft_retline(find_new_line(ptr), &ptr, counter));
 	if (ptr && counter)

@@ -48,3 +48,10 @@ int	ft_printf(const char *format, ...)
 	}
 	return (va_end(pointer), length);
 }
+
+int	ft_printf(const char *format, ...)
+{
+	int len = 0;
+
+	va_list
+}
